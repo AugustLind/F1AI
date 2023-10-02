@@ -1,0 +1,33 @@
+import requests
+from datetime import datetime
+
+# URL til API-en som gir informasjon om alle løp i 2023-sesongen
+url = "http://ergast.com/api/f1/2023.json"
+
+# Hent data fra API-en
+response = requests.get(url)
+
+# Sjekk om forespørselen var vellykket
+if response.status_code == 200:
+    # Hent JSON-data fra responsen
+    data = response.json()
+
+    # Finn dagens dato
+    today = datetime.now().date()
+
+    # Gå gjennom hvert løp for å finne det neste
+    next_race = None
+    for race in data["MRData"]["RaceTable"]["Races"]:
+        race_date = datetime.strptime(race["date"], "%Y-%m-%d").date()
+        if race_date >= today:
+            next_race = race
+            break
+
+    if next_race:
+        race_name = next_race["raceName"]
+        race_date = next_race["date"]
+        print(f"Neste Formel 1-løp er {race_name}, som vil finne sted den {race_date}.")
+    else:
+        print("Ingen kommende Formel 1-løp er tilgjengelige i API-en for 2023-sesongen.")
+else:
+    print("Feil ved henting av data fra API-en")
