@@ -1,4 +1,8 @@
 import requests
+import csv
+import fastf1
+import fastf1.plotting
+
 
 # URL til API-en som gir resultater for alle løp i 2023-sesongen
 base_url = "http://ergast.com/api/f1/2023/results.json?limit=1000"
@@ -31,13 +35,17 @@ if response.status_code == 200:
                 driver_positions[driver_name] = []
             driver_positions[driver_name].append(position)
 
-# Skriv ut plasseringene til hver fører
-#for driver, positions in driver_positions.items():
-    #print(f"{driver}: {positions}")
+# Skriv data til CSV-filen
+csv_file = "driver_positions.csv"
 
-drivers = driver_positions.keys()
+with open(csv_file, "w", newline="") as csvfile:
+    csv_writer = csv.writer(csvfile)
+    
+    # Skriv headeren til CSV-filen
+    csv_writer.writerow(["Driver", "Positions"])
+    
+    # Skriv dataen for hver fører
+    for driver, positions in driver_positions.items():
+        csv_writer.writerow([driver, ", ".join(positions)])
 
-driver_results = driver_positions.items()
-
-print(drivers)
-print(driver_results)
+print(f"Data has been saved to {csv_file}")

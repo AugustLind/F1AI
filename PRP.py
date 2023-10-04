@@ -23,7 +23,7 @@ qualiToRacePos = pd.read_csv('QualiConversions.csv', index_col=0)
 
 def PredictedRacePosition(driver, startingPos, verbose):
     #Gets A Race With All Current Drivers In To Get Their Data From (Use First Race Of Current Year)
-    driverInfo = ff1.get_session(2023,1,'R').get_driver(driver)
+    driverInfo = ff1.get_session(2021,1,'R').get_driver(driver)
     #Gets The Inputted Drivers DriverID
     driverID = driverInfo.info['Driver']['driverId']
 
