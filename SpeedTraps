@@ -1,0 +1,59 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+import fastf1 as ff1
+import fastf1.plotting
+import matplotlib as mpl
+import matplotlib.ticker as tck
+import numpy as np
+from matplotlib.offsetbox import OffsetImage,AnnotationBbox
+from timple.timedelta import strftimedelta
+from fastf1.core import Laps
+
+mpl.rcParams.update(mpl.rcParamsDefault)
+
+
+fastf1.Cache.enable_cache('Cache')  # replace with your cache directory
+fastf1.plotting.setup_mpl(mpl_timedelta_support=True, color_scheme='none', misc_mpl_mods=False)
+session_year = 2023
+session_event = 'British Grand Prix'
+session_name = 'R'
+session = fastf1.get_session(session_year, session_event, session_name)
+session.load()
+drivers = pd.unique(session.laps['Driver'])
+
+list_fastest_laps = list()
+for drv in drivers:
+    drvs_fastest_lap = session.laps.pick_driver(drv).pick_fastest()
+    list_fastest_laps.append(drvs_fastest_lap)
+fastest_laps = Laps(list_fastest_laps).sort_values(by='LapTime')
+
+speedtrap_by_team = fastest_laps[['Team', 'SpeedST']].groupby(['Team']).max().sort_values('SpeedST', ascending=False).reset_index()
+speedtrap_by_team['ShortName'] = speedtrap_by_team['Team'].str.replace(' Racing', '').str.replace(' F1 Team', '')
+team_colors = list()
+
+for index, team in speedtrap_by_team.iterrows():
+    color = ff1.plotting.team_color(team['Team'])
+    team_colors.append(color)
+    
+plt.style.use("ggplot") 
+fig, ax = plt.subplots()
+
+hbars = ax.bar(speedtrap_by_team['ShortName']
+               , speedtrap_by_team['SpeedST']
+               , color=team_colors
+               , edgecolor='grey')
+#set the upper and lower boundaries of the y axis
+plt.ylim(round((speedtrap_by_team['SpeedST'].min() - 10)/10)*10
+         , round((speedtrap_by_team['SpeedST'].max() + 10)/10)*10)
+
+ax.set(xlabel='')
+ax.set(ylabel='Speed (km/h)')
+ax.set_axisbelow(True)
+ax.yaxis.grid(True, which='major', linestyle='-')
+ax.xaxis.grid(False)
+
+plt.suptitle(f"{session.event['EventName']} {session.event.year} {session_name} \n"
+             f"Max Speed Trap (Fastest Lap)")
+plt.xticks(rotation=90)
+ax.bar_label(hbars, fontsize=10, padding=3)
+plt.show()
