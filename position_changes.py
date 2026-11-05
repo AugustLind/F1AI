@@ -1,7 +1,10 @@
+from f1_common import enable_cache
+
 import fastf1.plotting
 import matplotlib.pyplot as plt
 
-fastf1.Cache.enable_cache('Cache')
+
+enable_cache()
 
 fastf1.plotting.setup_mpl(misc_mpl_mods=False)
 
@@ -11,10 +14,10 @@ session.load(telemetry=False, weather=False)
 fig, ax = plt.subplots(figsize=(8.0, 4.9))
 
 for drv in session.drivers:
-    drv_laps = session.laps.pick_driver(drv)
+    drv_laps = session.laps.pick_drivers(drv)
 
     abb = drv_laps['Driver'].iloc[0]
-    color = fastf1.plotting.driver_color(abb)
+    color = fastf1.plotting.get_driver_color(abb, session)
 
     ax.plot(drv_laps['LapNumber'], drv_laps['Position'],
             label=abb, color=color)

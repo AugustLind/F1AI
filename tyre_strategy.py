@@ -1,8 +1,11 @@
+from f1_common import enable_cache
+
 import fastf1
 import fastf1.plotting
 from matplotlib import pyplot as plt
 
-fastf1.Cache.enable_cache('Cache')
+
+enable_cache()
 
 session = fastf1.get_session(2023, "British Grand Prix", 'R')
 session.load()
@@ -33,7 +36,7 @@ for driver in drivers:
             y=driver,
             width=row["StintLength"],
             left=previous_stint_end,
-            color=fastf1.plotting.COMPOUND_COLORS[row["Compound"]],
+            color=fastf1.plotting.get_compound_color(row["Compound"], session),
             edgecolor="black",
             fill=True
         )

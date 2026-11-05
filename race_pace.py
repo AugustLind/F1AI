@@ -1,7 +1,11 @@
+from f1_common import enable_cache
+
 import fastf1
 import fastf1.plotting
 import seaborn as sns
 from matplotlib import pyplot as plt
+
+enable_cache()
 
 fastf1.plotting.setup_mpl(mpl_timedelta_support=False, misc_mpl_mods=False)
 
@@ -23,7 +27,7 @@ team_order = (
 print(team_order)
 
 # make a color palette associating team names to hex codes
-team_palette = {team: fastf1.plotting.team_color(team) for team in team_order}
+team_palette = {team: fastf1.plotting.get_team_color(team, race) for team in team_order}
 
 fig, ax = plt.subplots(figsize=(15, 10))
 sns.boxplot(

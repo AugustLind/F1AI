@@ -1,11 +1,14 @@
+from f1_common import enable_cache
+
 import fastf1
 import fastf1.plotting
 import numpy as np
 from matplotlib import pyplot as plt
 
-fastf1.Cache.enable_cache('Cache')
 
 # The misc_mpl_mods option enables minor grid lines which clutter the plot
+enable_cache()
+
 fastf1.plotting.setup_mpl(misc_mpl_mods=False)
 
 session = fastf1.get_session(2023, "British Grand Prix", 'R')
@@ -18,7 +21,7 @@ def plot_trackTemp_and_airTemp(session, session_name):
     y2 = session.weather_data.TrackTemp
     x = session.weather_data.Time
     # Creating figure
-    fig = plt.figure()
+    fig = plt.figure(figsize=(10, 6))
     
     # Plotting dataset_2
     ax = fig.add_subplot(111)
@@ -45,7 +48,6 @@ def plot_trackTemp_and_airTemp(session, session_name):
     
     # Show plot
     plt.suptitle(f"AirTemp and TrackTemp \n "f"{session.event['EventName']} {session.event.year} {session_name}")
-    plt.figure().set_size_inches(50000, 500000, forward=True)
     plt.show()
 
 plot_trackTemp_and_airTemp(session, "R")

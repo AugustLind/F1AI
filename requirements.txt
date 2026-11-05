@@ -1,0 +1,7 @@
+# Plotting experiments; these are compatibility ranges, not a locked environment.
+fastf1>=3.6,<4
+matplotlib>=3.8,<4
+numpy>=1.26,<3
+pandas>=2.2,<3
+seaborn>=0.13,<0.14
+timple>=0.1.8,<0.2

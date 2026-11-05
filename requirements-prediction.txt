@@ -1,0 +1,5 @@
+# Optional dependencies for the unfinished prediction experiment.
+-r requirements.txt
+requests>=2.31,<3
+scikit-learn>=1.3,<2
+tensorflow>=2.15,<3

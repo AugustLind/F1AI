@@ -1,3 +1,5 @@
+from f1_common import enable_cache
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import fastf1 as ff1
@@ -12,8 +14,9 @@ from fastf1.core import Laps
 mpl.rcParams.update(mpl.rcParamsDefault)
 
 
-fastf1.Cache.enable_cache('Cache')  # replace with your cache directory
-fastf1.plotting.setup_mpl(mpl_timedelta_support=True, color_scheme='none', misc_mpl_mods=False)
+enable_cache()
+
+fastf1.plotting.setup_mpl(mpl_timedelta_support=True, misc_mpl_mods=False)
 session_year = 2023
 session_event = 'British Grand Prix'
 session_name = 'R'
@@ -23,7 +26,7 @@ drivers = pd.unique(session.laps['Driver'])
 
 list_fastest_laps = list()
 for drv in drivers:
-    drvs_fastest_lap = session.laps.pick_driver(drv).pick_fastest()
+    drvs_fastest_lap = session.laps.pick_drivers(drv).pick_fastest()
     list_fastest_laps.append(drvs_fastest_lap)
 fastest_laps = Laps(list_fastest_laps).sort_values(by='LapTime')
 
@@ -32,7 +35,7 @@ speedtrap_by_team['ShortName'] = speedtrap_by_team['Team'].str.replace(' Racing'
 team_colors = list()
 
 for index, team in speedtrap_by_team.iterrows():
-    color = ff1.plotting.team_color(team['Team'])
+    color = ff1.plotting.get_team_color(team['Team'], session)
     team_colors.append(color)
     
 plt.style.use("ggplot") 
